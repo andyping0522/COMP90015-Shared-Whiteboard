@@ -1,20 +1,31 @@
 package board;
 
 import javax.swing.*;
+import static javax.swing.JOptionPane.showInputDialog;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.rmi.RemoteException;
+
+
+import remote.IRemoteBoard;
 
 public class BoardApp extends JFrame implements ActionListener, MouseListener {
 
     private boolean isManager;
     private String actionType;
+    private int x1;
+    private int x2;
+    private int y1;
+    private int y2;
+    private IRemoteBoard board;
 
-    public BoardApp(boolean isManager) {
+    public BoardApp(boolean isManager, IRemoteBoard board) {
         this.isManager = isManager;
         this.setTitle("Shared White Board");
+        this.board = board;
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         if (this.isManager) {
             // display file menu
@@ -67,11 +78,67 @@ public class BoardApp extends JFrame implements ActionListener, MouseListener {
     @Override
     public void mousePressed(MouseEvent e) {
 
+        this.x1 = e.getX();
+        this.y1 = e.getY();
+
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        this.x2 = e.getX();
+        this.y2 = e.getY();
 
+        switch (this.actionType) {
+            case "Line":
+                try {
+                    this.board.drawLine(x1, y1, x2, y2);
+                } catch (RemoteException remoteException) {
+                    remoteException.printStackTrace();
+                }
+                break;
+
+
+            case "Circle":
+                try {
+                    int width = Math.abs(x2 - x1);
+                    int height = Math.abs(y2 - y1);
+                    this.board.drawCircle((int)this.getCoord().getX(), (int)this.getCoord().getY(), width, height);
+
+                } catch (RemoteException remoteException) {
+                    remoteException.printStackTrace();
+                }
+                break;
+
+            case "Rectangle":
+
+                try {
+                    int width = Math.abs(x2 - x1);
+                    int height = Math.abs(y2 - y1);
+                    this.board.drawRectangle((int)this.getCoord().getX(), (int)this.getCoord().getY(), width, height);
+                } catch (RemoteException remoteException) {
+                    remoteException.printStackTrace();
+                }
+                break;
+
+            case "Triangle":
+                try {
+                    int width = Math.abs(x2 - x1);
+                    int height = Math.abs(y2 - y1);
+                    this.board.drawTriangle(x1, y1, x2, y2);
+                } catch (RemoteException remoteException) {
+                    remoteException.printStackTrace();
+
+                }
+                break;
+
+            case "Text":
+                try {
+                    String text = showInputDialog("Enter text: ");
+                    this.board.drawText(text, (int)this.getCoord().getX(), (int)this.getCoord().getY());
+                } catch (RemoteException remoteException) {
+                    remoteException.printStackTrace();
+                }
+        }
     }
 
     @Override
@@ -83,4 +150,17 @@ public class BoardApp extends JFrame implements ActionListener, MouseListener {
     public void mouseExited(MouseEvent e) {
 
     }
+
+    private Point getCoord() {
+        if (x1 < x2 && y1 < y2) {
+            return new Point(x1, y2);
+        } else if (x1 < x2 && y1 > y2) {
+            return new Point(x1, y1);
+        } else if (x1 > x2 && y1 > y2) {
+            return new Point(x2, y1);
+        } else {
+            return new Point(x2, y2);
+        }
+    }
+
 }
