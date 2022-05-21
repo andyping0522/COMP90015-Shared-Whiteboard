@@ -50,6 +50,10 @@ public class BoardApp extends JFrame implements ActionListener, MouseListener {
 
     }
 
+    public void start() {
+        this.setVisible(true);
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         actionType = e.getActionCommand();

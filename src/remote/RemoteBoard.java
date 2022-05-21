@@ -67,6 +67,6 @@ public class RemoteBoard extends UnicastRemoteObject implements IRemoteBoard {
 
     @Override
     public BufferedImage getBoard() throws RemoteException {
-        return null;
+        return this.board;
     }
 }
