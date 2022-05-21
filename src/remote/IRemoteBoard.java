@@ -1,6 +1,7 @@
 package remote;
 
 
+
 import java.awt.image.BufferedImage;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -20,6 +21,6 @@ public interface IRemoteBoard extends Remote {
 
     void clear() throws RemoteException;
 
-    BufferedImage getCanvas() throws RemoteException;
+    BufferedImage getBoard() throws RemoteException;
     
 }
