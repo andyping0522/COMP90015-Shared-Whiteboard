@@ -27,6 +27,7 @@ public class BoardApp extends JFrame implements ActionListener, MouseListener {
         this.setTitle("Shared White Board");
         this.board = board;
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.actionType = "Rectangle";
         if (this.isManager) {
             // display file menu
         }
@@ -46,6 +47,7 @@ public class BoardApp extends JFrame implements ActionListener, MouseListener {
         triangleBtn.addActionListener(this);
         rectangleBtn.addActionListener(this);
         textBtn.addActionListener(this);
+        rectangleBtn.setSelected(true);
         JPanel buttonPanel = new JPanel(new FlowLayout());
         buttonPanel.add(lineBtn);
         buttonPanel.add(circleBtn);
@@ -53,10 +55,13 @@ public class BoardApp extends JFrame implements ActionListener, MouseListener {
         buttonPanel.add(textBtn);
         buttonPanel.add(triangleBtn);
         JPanel canvas = new JPanel();
-
+        canvas.setLayout(new BorderLayout());
+        canvas.setBounds(10, 30, 10, 10);
+        canvas.setBackground(Color.WHITE);
+        this.setLayout(new BorderLayout());
         this.addMouseListener(this);
-        this.add(buttonPanel);
-        this.add(canvas);
+        this.add(buttonPanel, BorderLayout.NORTH);
+        this.add(canvas, BorderLayout.CENTER);
         this.pack();
 
     }
@@ -138,7 +143,10 @@ public class BoardApp extends JFrame implements ActionListener, MouseListener {
                 } catch (RemoteException remoteException) {
                     remoteException.printStackTrace();
                 }
+
         }
+
+        
     }
 
     @Override

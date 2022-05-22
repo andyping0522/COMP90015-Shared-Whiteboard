@@ -10,11 +10,12 @@ public class Server {
 
     public static void main(String args[]) {
 
-        int port = Integer.parseInt(args[1]);
+        int port = Integer.parseInt(args[0]);
 
         try {
             IRemoteBoard board = new RemoteBoard();
-            Registry registry = LocateRegistry.getRegistry();
+            Registry registry = LocateRegistry.getRegistry("localhost");
+            System.out.println(registry.toString());
             registry.bind("SharedBoard", board);
 
         } catch (RemoteException | AlreadyBoundException e) {

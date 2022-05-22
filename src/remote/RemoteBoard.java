@@ -28,6 +28,7 @@ public class RemoteBoard extends UnicastRemoteObject implements IRemoteBoard {
         Graphics g = this.board.getGraphics();
         Graphics2D g2 = (Graphics2D) g;
         g2.drawRect(x, y, w, h);
+        System.out.println("bruh");
     }
 
     @Override

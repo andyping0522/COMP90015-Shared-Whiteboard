@@ -17,6 +17,7 @@ public class CreateWhiteBoard {
             IRemoteBoard board = (IRemoteBoard) registry.lookup("SharedBoard");
 
             BoardApp app = new BoardApp(true, board);
+            app.start();
         } catch (AccessException e) {
             e.printStackTrace();
         } catch (RemoteException e) {
