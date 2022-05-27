@@ -2,18 +2,24 @@ package remote;
 
 
 import java.awt.*;
+import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
-
+import javax.imageio.ImageIO;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
 import java.lang.Math;
+import java.util.ArrayList;
 
 public class RemoteBoard extends UnicastRemoteObject implements IRemoteBoard {
 
     private BufferedImage board;
+    private ArrayList<Shape> shapes;
     public RemoteBoard() throws RemoteException {
-        this.board = new BufferedImage(1500, 1500, BufferedImage.TYPE_INT_ARGB);
+        this.board = new BufferedImage(600, 600, BufferedImage.TYPE_INT_ARGB);
+        this.shapes = new ArrayList<>();
     }
 
     @Override
@@ -21,6 +27,8 @@ public class RemoteBoard extends UnicastRemoteObject implements IRemoteBoard {
         Graphics g = this.board.getGraphics();
         Graphics2D g2 = (Graphics2D) g;
         g2.drawLine(x1, y1, x2, y2);
+        Shape line = new Line2D.Double(x1, y1, x2, y2);
+        this.shapes.add(line);
     }
 
     @Override
@@ -56,9 +64,10 @@ public class RemoteBoard extends UnicastRemoteObject implements IRemoteBoard {
     @Override
     public void drawCircle(int x, int y, int w, int h) throws RemoteException {
         Graphics g = this.board.getGraphics();
-        Graphics2D g2 = (Graphics2D) g;
 
-        g2.drawOval(x, y, w, h);
+
+        g.drawOval(x, y, w, h);
+        System.out.println("bruh");
     }
 
     @Override
@@ -67,7 +76,24 @@ public class RemoteBoard extends UnicastRemoteObject implements IRemoteBoard {
     }
 
     @Override
-    public BufferedImage getBoard() throws RemoteException {
-        return this.board;
+    public byte[] getBoard() throws RemoteException {
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        byte[] out;
+        try{
+            ImageIO.write(board, "jpg", os);
+            System.out.println("hello");
+            out = os.toByteArray();
+            System.out.println(out);
+        } catch (IOException e) {
+            e.printStackTrace();
+            out = null;
+        }
+        return out;
+
+    }
+
+    @Override
+    public ArrayList<Shape> getComponents() {
+        return shapes;
     }
 }

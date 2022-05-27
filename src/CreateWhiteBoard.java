@@ -1,6 +1,7 @@
 import board.BoardApp;
 import remote.IRemoteBoard;
 
+import java.awt.*;
 import java.rmi.AccessException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -15,7 +16,6 @@ public class CreateWhiteBoard {
 
             Registry registry = LocateRegistry.getRegistry("localhost");
             IRemoteBoard board = (IRemoteBoard) registry.lookup("SharedBoard");
-
             BoardApp app = new BoardApp(true, board);
             app.start();
         } catch (AccessException e) {

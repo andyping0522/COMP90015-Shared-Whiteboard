@@ -2,9 +2,11 @@ package remote;
 
 
 
-import java.awt.image.BufferedImage;
+import java.awt.*;
+//import java.awt.image.BufferedImage;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 
 
 public interface IRemoteBoard extends Remote {
@@ -21,6 +23,8 @@ public interface IRemoteBoard extends Remote {
 
     void clear() throws RemoteException;
 
-    BufferedImage getBoard() throws RemoteException;
+    byte[] getBoard() throws RemoteException;
+
+    ArrayList<Shape> getComponents() throws RemoteException;
     
 }

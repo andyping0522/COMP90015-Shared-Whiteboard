@@ -1,5 +1,6 @@
 package board;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import static javax.swing.JOptionPane.showInputDialog;
 import java.awt.*;
@@ -7,7 +8,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 
 
 import remote.IRemoteBoard;
@@ -21,6 +28,7 @@ public class BoardApp extends JFrame implements ActionListener, MouseListener {
     private int y1;
     private int y2;
     private IRemoteBoard board;
+    private ArrayList<Shape> shapes;
 
     public BoardApp(boolean isManager, IRemoteBoard board) {
         this.isManager = isManager;
@@ -56,7 +64,7 @@ public class BoardApp extends JFrame implements ActionListener, MouseListener {
         buttonPanel.add(triangleBtn);
         JPanel canvas = new JPanel();
         canvas.setLayout(new BorderLayout());
-        canvas.setBounds(10, 30, 10, 10);
+        canvas.setBounds(10, 30, 600, 600);
         canvas.setBackground(Color.WHITE);
         this.setLayout(new BorderLayout());
         this.addMouseListener(this);
@@ -69,6 +77,8 @@ public class BoardApp extends JFrame implements ActionListener, MouseListener {
     public void start() {
         this.setVisible(true);
     }
+
+
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -120,6 +130,7 @@ public class BoardApp extends JFrame implements ActionListener, MouseListener {
                     int width = Math.abs(x2 - x1);
                     int height = Math.abs(y2 - y1);
                     this.board.drawRectangle((int)this.getCoord().getX(), (int)this.getCoord().getY(), width, height);
+
                 } catch (RemoteException remoteException) {
                     remoteException.printStackTrace();
                 }
@@ -140,11 +151,13 @@ public class BoardApp extends JFrame implements ActionListener, MouseListener {
                 try {
                     String text = showInputDialog("Enter text: ");
                     this.board.drawText(text, (int)this.getCoord().getX(), (int)this.getCoord().getY());
+                    //this.repaint();
                 } catch (RemoteException remoteException) {
                     remoteException.printStackTrace();
                 }
 
         }
+        this.repaint();
 
         
     }
@@ -171,4 +184,54 @@ public class BoardApp extends JFrame implements ActionListener, MouseListener {
         }
     }
 
+    @Override
+    public void paint(Graphics g){
+        paintComponents(g);
+        g.drawLine(199, 100, 250, 300);
+        try {
+//            byte[] img = this.board.getBoard();
+//            ByteArrayInputStream in = new ByteArrayInputStream(img);
+//            BufferedImage g2 = ImageIO.read(in);
+            //System.out.println(img[0]);
+            //System.out.println(in.toString());
+            //g.drawImage(g2, 10, 30, 600, 600, null);
+
+            ArrayList<Shape> shapes = this.board.getComponents();
+            //System.out.println(shapes.toString());
+            for (Shape shape:shapes) {
+                Graphics2D g3 = (Graphics2D)g;
+                g3.draw(shape);
+            }
+
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+//    @Override
+//    public void paintComponents(Graphics g) {
+//        super.paintComponents(g);
+//        //g.drawLine(199, 100, 250, 300);
+//        try {
+//            byte[] img = this.board.getBoard();
+////            InputStream in = new ByteArrayInputStream(img);
+////            BufferedImage g2 = ImageIO.read(in);
+//
+////            g.drawImage(g2, 10, 30, 10, 10, null);
+//            //g.drawLine(2, 2, 3, 3);
+//            //g.drawLine(199, 100, 250, 300);
+//            ArrayList<Shape> shapes = this.board.getComponents();
+//            for (Shape shape:shapes) {
+//                Graphics2D g3 = (Graphics2D)g;
+//                g3.draw(shape);
+//            }
+//            this.repaint();
+//        } catch (RemoteException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 }
