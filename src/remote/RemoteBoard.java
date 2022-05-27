@@ -29,6 +29,7 @@ public class RemoteBoard extends UnicastRemoteObject implements IRemoteBoard {
         g2.drawLine(x1, y1, x2, y2);
         Shape line = new Line2D.Double(x1, y1, x2, y2);
         this.shapes.add(line);
+        System.out.println("yo");
     }
 
     @Override

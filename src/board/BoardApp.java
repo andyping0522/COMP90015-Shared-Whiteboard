@@ -1,6 +1,6 @@
 package board;
 
-import javax.imageio.ImageIO;
+
 import javax.swing.*;
 import static javax.swing.JOptionPane.showInputDialog;
 import java.awt.*;
@@ -8,11 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
+
 import java.io.IOException;
-import java.io.InputStream;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
@@ -157,7 +154,7 @@ public class BoardApp extends JFrame implements ActionListener, MouseListener {
                 }
 
         }
-        this.repaint();
+        //this.repaint();
 
         
     }
@@ -202,7 +199,7 @@ public class BoardApp extends JFrame implements ActionListener, MouseListener {
                 Graphics2D g3 = (Graphics2D)g;
                 g3.draw(shape);
             }
-
+            this.repaint();
         } catch (RemoteException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -215,7 +212,7 @@ public class BoardApp extends JFrame implements ActionListener, MouseListener {
 //        super.paintComponents(g);
 //        //g.drawLine(199, 100, 250, 300);
 //        try {
-//            byte[] img = this.board.getBoard();
+//
 ////            InputStream in = new ByteArrayInputStream(img);
 ////            BufferedImage g2 = ImageIO.read(in);
 //
