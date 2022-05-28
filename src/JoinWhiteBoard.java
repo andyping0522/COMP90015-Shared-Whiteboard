@@ -13,10 +13,12 @@ public class JoinWhiteBoard {
 
     public static void main(String args[]) {
         try {
-
-            Registry registry = LocateRegistry.getRegistry("localhost");
+            String ip = args[0];
+            String port = args[1];
+            String userName = args[2];
+            Registry registry = LocateRegistry.getRegistry(ip);
             IRemoteBoard board = (IRemoteBoard) registry.lookup("SharedBoard");
-            BoardApp app = new BoardApp(false, board);
+            BoardApp app = new BoardApp(false, board, userName);
             app.start();
         } catch (AccessException e) {
             e.printStackTrace();

@@ -5,37 +5,33 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import static javax.swing.JOptionPane.showInputDialog;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
-import java.io.IOException;
-import java.rmi.RemoteException;
-import java.util.ArrayList;
 
 
 import remote.IRemoteBoard;
 
 public class BoardApp extends JFrame implements ActionListener, ChangeListener {
 
-    private boolean isManager;
 
+    private final WhiteBoard whiteBoard;
+    private final JColorChooser chooser;
+    private final String userName;
 
-    private WhiteBoard whiteBoard;
-    private JColorChooser chooser;
-
-    public BoardApp(boolean isManager, IRemoteBoard board) {
-        this.isManager = isManager;
+    public BoardApp(boolean isManager, IRemoteBoard board, String userName) {
+        this.userName = userName;
         this.setTitle("Shared White Board");
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        if (this.isManager) {
+        if (isManager) {
             // display file menu
         }
+        JLabel name = new JLabel();
+        name.setText(userName);
+        name.setLayout(new BorderLayout());
         ButtonGroup group = new ButtonGroup();
         JRadioButton lineBtn = new JRadioButton("Line");
         JRadioButton circleBtn = new JRadioButton("Circle");
@@ -72,6 +68,7 @@ public class BoardApp extends JFrame implements ActionListener, ChangeListener {
         whiteBoard.setBounds(5, 50, 600, 600);
         chooser.getSelectionModel().addChangeListener(this);
         this.setLayout(new BorderLayout());
+        this.add(name, BorderLayout.PAGE_START);
         this.add(colorPanel, BorderLayout.SOUTH);
         this.add(buttonPanel, BorderLayout.NORTH);
         this.add(whiteBoard, BorderLayout.CENTER);

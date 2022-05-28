@@ -9,7 +9,7 @@ import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
-import java.util.EventListener;
+
 
 import static javax.swing.JOptionPane.showInputDialog;
 
@@ -158,8 +158,6 @@ public class WhiteBoard extends JPanel implements MouseListener{
                 g3.draw(shape.getShape());
             }
             this.repaint();
-        } catch (RemoteException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
