@@ -1,6 +1,7 @@
 package board;
 
 import remote.IRemoteBoard;
+import remote.IRemoteUsers;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,6 +23,7 @@ public class WhiteBoard extends JPanel implements MouseListener{
     private int y1;
     private int y2;
     private IRemoteBoard board;
+    private IRemoteUsers users;
 
 
     public WhiteBoard(IRemoteBoard board) {

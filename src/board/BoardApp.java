@@ -8,10 +8,12 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+import java.rmi.RemoteException;
+import java.util.ArrayList;
 
 
 import remote.IRemoteBoard;
+import remote.IRemoteUsers;
 
 public class BoardApp extends JFrame implements ActionListener, ChangeListener {
 
@@ -19,9 +21,14 @@ public class BoardApp extends JFrame implements ActionListener, ChangeListener {
     private final WhiteBoard whiteBoard;
     private final JColorChooser chooser;
     private final String userName;
+    private IRemoteUsers remoteUsers;
+    private JTextArea listDisplay;
+    //private ArrayList<String> users;
 
-    public BoardApp(boolean isManager, IRemoteBoard board, String userName) {
+    public BoardApp(boolean isManager, IRemoteBoard board, String userName, IRemoteUsers remoteUsers) {
         this.userName = userName;
+        this.remoteUsers = remoteUsers;
+        //this.users = remoteUsers.getUsers();
         this.setTitle("Shared White Board");
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -60,16 +67,35 @@ public class BoardApp extends JFrame implements ActionListener, ChangeListener {
         colorPanel.add(chooser);
         colorPanel.setPreferredSize(new Dimension(200, 200));
         chooser.setPreviewPanel(new JPanel());
+        listDisplay = new JTextArea();
+        listDisplay.setLineWrap(true);
+        listDisplay.setWrapStyleWord(true);
+
+        JPanel userList = new JPanel();
+        userList.add(listDisplay, BorderLayout.NORTH);
         this.whiteBoard = new WhiteBoard(board);
         whiteBoard.setLayout(new BorderLayout());
         //whiteBoard.setBounds(5, 50, 600, 600);
         chooser.getSelectionModel().addChangeListener(this);
         this.setLayout(new BorderLayout());
         //this.add(name, BorderLayout.EAST);
+        this.add(listDisplay, BorderLayout.EAST);
         this.add(colorPanel, BorderLayout.SOUTH);
         this.add(buttonPanel, BorderLayout.NORTH);
         this.add(whiteBoard, BorderLayout.CENTER);
-
+        Thread updateThread = new Thread(() -> {
+            try {
+                setList();
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+        updateThread.start();
 
         this.pack();
 
@@ -77,6 +103,20 @@ public class BoardApp extends JFrame implements ActionListener, ChangeListener {
 
     public void start() {
         this.setVisible(true);
+    }
+
+
+    private void setList() throws RemoteException {
+
+        while (true) {
+            ArrayList<String> users = this.remoteUsers.getUsers();
+            String result = "";
+            for (String user:users){
+                result = result + user + "\n";
+            }
+            this.listDisplay.setText(result);
+        }
+
     }
 
 
