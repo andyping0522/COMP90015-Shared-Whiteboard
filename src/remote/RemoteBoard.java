@@ -61,7 +61,7 @@ public class RemoteBoard extends UnicastRemoteObject implements IRemoteBoard {
         if (x2 < x1) {
             x3 = x1 - horizontal;
         } else {
-            x3 = x2 - horizontal;
+            x3 = x2 - 2 * horizontal;
         }
         int y3 = y2;
 

@@ -147,7 +147,7 @@ public class WhiteBoard extends JPanel implements MouseListener{
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         //setIgnoreRepaint(true);
-        g.drawLine(199, 100, 250, 300);
+        //g.drawLine(199, 100, 250, 300);
         try {
 
 

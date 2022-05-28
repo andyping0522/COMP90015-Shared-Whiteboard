@@ -25,13 +25,9 @@ public class BoardApp extends JFrame implements ActionListener, ChangeListener {
         this.setTitle("Shared White Board");
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        if (isManager) {
-            // display file menu
-        }
         JLabel name = new JLabel();
-        name.setText(userName);
-        name.setLayout(new BorderLayout());
+        name.setText("Welcome, "+ userName + "      ");
+        //name.setLayout(new BorderLayout());
         ButtonGroup group = new ButtonGroup();
         JRadioButton lineBtn = new JRadioButton("Line");
         JRadioButton circleBtn = new JRadioButton("Circle");
@@ -50,11 +46,12 @@ public class BoardApp extends JFrame implements ActionListener, ChangeListener {
         textBtn.addActionListener(this);
         rectangleBtn.setSelected(true);
         JPanel buttonPanel = new JPanel();
-        buttonPanel.add(lineBtn);
-        buttonPanel.add(circleBtn);
-        buttonPanel.add(rectangleBtn);
-        buttonPanel.add(textBtn);
-        buttonPanel.add(triangleBtn);
+        buttonPanel.add(name, BorderLayout.NORTH);
+        buttonPanel.add(lineBtn, BorderLayout.SOUTH);
+        buttonPanel.add(circleBtn, BorderLayout.SOUTH);
+        buttonPanel.add(rectangleBtn, BorderLayout.SOUTH);
+        buttonPanel.add(textBtn, BorderLayout.SOUTH);
+        buttonPanel.add(triangleBtn, BorderLayout.SOUTH);
         this.chooser = new JColorChooser();
         JPanel colorPanel = new JPanel();
         colorPanel.setLayout(new BorderLayout());
@@ -65,10 +62,10 @@ public class BoardApp extends JFrame implements ActionListener, ChangeListener {
         chooser.setPreviewPanel(new JPanel());
         this.whiteBoard = new WhiteBoard(board);
         whiteBoard.setLayout(new BorderLayout());
-        whiteBoard.setBounds(5, 50, 600, 600);
+        //whiteBoard.setBounds(5, 50, 600, 600);
         chooser.getSelectionModel().addChangeListener(this);
         this.setLayout(new BorderLayout());
-        this.add(name, BorderLayout.PAGE_START);
+        //this.add(name, BorderLayout.EAST);
         this.add(colorPanel, BorderLayout.SOUTH);
         this.add(buttonPanel, BorderLayout.NORTH);
         this.add(whiteBoard, BorderLayout.CENTER);
