@@ -16,6 +16,7 @@ import static javax.swing.JOptionPane.showInputDialog;
 public class WhiteBoard extends JPanel implements MouseListener{
 
     private String type;
+    private Color color;
     private int x1;
     private int x2;
     private int y1;
@@ -34,6 +35,11 @@ public class WhiteBoard extends JPanel implements MouseListener{
     public void setType(String type) {
         this.type = type;
     }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
     @Override
     public void mouseClicked(MouseEvent e) {
 
@@ -55,7 +61,7 @@ public class WhiteBoard extends JPanel implements MouseListener{
         switch (this.type) {
             case "Line":
                 try {
-                    this.board.drawLine(x1, y1, x2, y2);
+                    this.board.drawLine(x1, y1, x2, y2, color);
                 } catch (RemoteException remoteException) {
                     remoteException.printStackTrace();
                 }
@@ -66,7 +72,7 @@ public class WhiteBoard extends JPanel implements MouseListener{
                 try {
                     int width = Math.abs(x2 - x1);
                     int height = Math.abs(y2 - y1);
-                    this.board.drawCircle((int)this.getCoord().getX(), (int)this.getCoord().getY(), width, height);
+                    this.board.drawCircle((int)this.getCoord().getX(), (int)this.getCoord().getY(), width, height, color);
 
                 } catch (RemoteException remoteException) {
                     remoteException.printStackTrace();
@@ -78,7 +84,7 @@ public class WhiteBoard extends JPanel implements MouseListener{
                 try {
                     int width = Math.abs(x2 - x1);
                     int height = Math.abs(y2 - y1);
-                    this.board.drawRectangle((int)this.getCoord().getX(), (int)this.getCoord().getY(), width, height);
+                    this.board.drawRectangle((int)this.getCoord().getX(), (int)this.getCoord().getY(), width, height, color);
 
                 } catch (RemoteException remoteException) {
                     remoteException.printStackTrace();
@@ -89,7 +95,7 @@ public class WhiteBoard extends JPanel implements MouseListener{
                 try {
                     int width = Math.abs(x2 - x1);
                     int height = Math.abs(y2 - y1);
-                    this.board.drawTriangle(x1, y1, x2, y2);
+                    this.board.drawTriangle(x1, y1, x2, y2, color);
                 } catch (RemoteException remoteException) {
                     remoteException.printStackTrace();
 
@@ -99,7 +105,8 @@ public class WhiteBoard extends JPanel implements MouseListener{
             case "Text":
                 try {
                     String text = showInputDialog("Enter text: ");
-                    this.board.drawText(text, (int)this.getCoord().getX(), (int)this.getCoord().getY());
+
+                    this.board.drawText(text, (int)this.getCoord().getX(), (int)this.getCoord().getY(), color);
                     //this.repaint();
                 } catch (RemoteException remoteException) {
                     remoteException.printStackTrace();
@@ -144,10 +151,11 @@ public class WhiteBoard extends JPanel implements MouseListener{
         try {
 
 
-            ArrayList<Shape> shapes = this.board.getComponents();
-            for (Shape shape:shapes) {
+            ArrayList<ColorShape> shapes = this.board.getComponents();
+            for (ColorShape shape:shapes) {
                 Graphics2D g3 = (Graphics2D)g;
-                g3.draw(shape);
+                g3.setColor(shape.getColor());
+                g3.draw(shape.getShape());
             }
             this.repaint();
         } catch (RemoteException e) {
