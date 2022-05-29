@@ -61,7 +61,8 @@ public class JoinWhiteBoard {
             e.printStackTrace();
 
         } catch (IOException e) {
-            System.out.println("Board does not exist");
+            System.out.println("Board does not exist or admin has closed the app");
+
             System.exit(-1);
         } catch (NotBoundException e) {
             e.printStackTrace();
