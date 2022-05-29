@@ -1,6 +1,7 @@
 import board.BoardApp;
 import connection.ConnectionManager;
 import remote.IRemoteBoard;
+import remote.IRemoteChat;
 import remote.IRemoteUsers;
 
 import javax.net.ServerSocketFactory;
@@ -20,7 +21,7 @@ public class CreateWhiteBoard {
 
 
 
-    public static void main(String args[]) {
+    public static void main(String[] args) {
 
         try {
             String ip = args[0];
@@ -29,9 +30,10 @@ public class CreateWhiteBoard {
             Registry registry = LocateRegistry.getRegistry(ip);
             IRemoteBoard board = (IRemoteBoard) registry.lookup("SharedBoard");
             IRemoteUsers users = (IRemoteUsers) registry.lookup("Users");
+            IRemoteChat chat = (IRemoteChat) registry.lookup("Chat");
             users.newUser(userName);
             ConnectionManager manager = new ConnectionManager();
-            BoardApp app = new BoardApp(true, board, userName, users, manager);
+            BoardApp app = new BoardApp(true, board, userName, users, manager, chat);
             app.start();
             ServerSocketFactory factory = ServerSocketFactory.getDefault();
             ServerSocket socket = factory.createServerSocket(port);

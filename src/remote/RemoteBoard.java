@@ -81,11 +81,6 @@ public class RemoteBoard extends UnicastRemoteObject implements IRemoteBoard {
         this.shapes.add(new ColorShape(c, oval));
     }
 
-    @Override
-    public void clear() throws RemoteException {
-        //this.board = new BufferedImage(1500, 1500, BufferedImage.TYPE_INT_ARGB);
-        this.shapes.clear();
-    }
 
     @Override
     public byte[] getBoard() throws RemoteException {

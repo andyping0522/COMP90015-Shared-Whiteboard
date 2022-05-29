@@ -23,7 +23,7 @@ public interface IRemoteBoard extends Remote {
 
     void drawCircle(int x, int y, int w, int h, Color c) throws RemoteException;
 
-    void clear() throws RemoteException;
+
 
     byte[] getBoard() throws RemoteException;
 

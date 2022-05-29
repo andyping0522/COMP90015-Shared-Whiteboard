@@ -15,6 +15,7 @@ import java.util.ArrayList;
 
 import connection.ConnectionManager;
 import remote.IRemoteBoard;
+import remote.IRemoteChat;
 import remote.IRemoteUsers;
 
 public class BoardApp extends JFrame implements ActionListener, ChangeListener {
@@ -24,16 +25,20 @@ public class BoardApp extends JFrame implements ActionListener, ChangeListener {
     private final JColorChooser chooser;
     private final String userName;
     private final IRemoteUsers remoteUsers;
+    private final IRemoteChat chat;
     //private final ConnectionManager connectionManager;
     private final ConnectionManager connectionManager;
     private JTextArea listDisplay;
-    private Thread updateThread;
+    private JTextArea chatDisplay;
+    private final Thread updateThread;
+    private final Thread chatThread;
     //private ArrayList<String> users;
 
     public BoardApp(boolean isManager, IRemoteBoard board, String userName, IRemoteUsers remoteUsers,
-                    ConnectionManager connectionManager) {
+                    ConnectionManager connectionManager, IRemoteChat chat) {
         this.userName = userName;
         this.remoteUsers = remoteUsers;
+        this.chat = chat;
         this.connectionManager = connectionManager;
         //this.users = remoteUsers.getUsers();
         this.setTitle("Shared White Board");
@@ -107,19 +112,44 @@ public class BoardApp extends JFrame implements ActionListener, ChangeListener {
                     ioException.printStackTrace();
                 }
             });
-            userList.add(kickField, BorderLayout.CENTER);
-            userList.add(kickButton, BorderLayout.SOUTH);
-
+            userList.add(kickButton);
+            userList.add(kickField);
         }
-        this.setLayout(new BorderLayout());
+        JPanel left = new JPanel();
+        chatDisplay = new JTextArea();
+        chatDisplay.setLineWrap(true);
+        chatDisplay.setWrapStyleWord(true);
+        JTextField sendField = new JTextField();
+        JButton sendButton = new JButton("Send");
+        sendButton.addActionListener(e -> {
+            String msg = sendField.getText();
+            try {
+                if (msg.isBlank()) {
+                    JOptionPane.showMessageDialog(this, "Cannot send empty message", "Alert",
+                            JOptionPane.WARNING_MESSAGE);
+                } else {
+                    chat.append(userName, msg);
+                }
+
+            } catch (RemoteException remoteException) {
+                remoteException.printStackTrace();
+            }
+        });
+        left.add(chatDisplay);
+        left.add(sendField);
+        left.add(sendButton);
+        //this.setLayout(new BorderLayout());
         //this.add(name, BorderLayout.EAST);
+        this.add(left, BorderLayout.WEST);
         this.add(userList, BorderLayout.EAST);
         this.add(colorPanel, BorderLayout.SOUTH);
         this.add(buttonPanel, BorderLayout.NORTH);
         this.add(whiteBoard, BorderLayout.CENTER);
+
         updateThread = new Thread(() -> {
             try {
                 setList();
+                //setChat();
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
@@ -130,6 +160,21 @@ public class BoardApp extends JFrame implements ActionListener, ChangeListener {
             }
         });
         updateThread.start();
+
+        chatThread = new Thread(() -> {
+            try {
+                //setList();
+                setChat();
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+        chatThread.start();
 
         this.pack();
 
@@ -153,6 +198,17 @@ public class BoardApp extends JFrame implements ActionListener, ChangeListener {
 
     }
 
+    private void setChat() throws RemoteException {
+        while (true) {
+            String msg = chat.getMsg();
+            chatDisplay.setText(msg);
+        }
+
+        //System.out.println("bb");
+
+
+    }
+
     public void popUpJoinRequest(String userName) throws IOException {
         int a = JOptionPane.showConfirmDialog(this, "Allow " + userName + " to join?");
         if (a == JOptionPane.YES_OPTION) {
@@ -168,6 +224,7 @@ public class BoardApp extends JFrame implements ActionListener, ChangeListener {
                 JOptionPane.WARNING_MESSAGE);
 
         updateThread.interrupt();
+        chatThread.interrupt();
         this.setVisible(false);
         this.dispose();
     }

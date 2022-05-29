@@ -1,5 +1,6 @@
 import board.BoardApp;
 import remote.IRemoteBoard;
+import remote.IRemoteChat;
 import remote.IRemoteUsers;
 
 
@@ -13,7 +14,7 @@ import java.rmi.registry.Registry;
 
 public class JoinWhiteBoard {
 
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         try {
             String ip = args[0];
             int port = Integer.parseInt(args[1]);
@@ -21,14 +22,14 @@ public class JoinWhiteBoard {
             Registry registry = LocateRegistry.getRegistry(ip);
             IRemoteBoard board = (IRemoteBoard) registry.lookup("SharedBoard");
             IRemoteUsers users = (IRemoteUsers) registry.lookup("Users");
-
+            IRemoteChat chat = (IRemoteChat) registry.lookup("Chat");
             if (users.verifyName(userName)) {
                 System.out.println("User name has been taken by others");
                 System.exit(-1);
             }
             //users.newUser(userName);
 
-            BoardApp app = new BoardApp(false, board, userName, users, null);
+            BoardApp app = new BoardApp(false, board, userName, users, null, chat);
             Socket socket = new Socket(ip, port);
             BufferedReader in = new BufferedReader(
                     new InputStreamReader(socket.getInputStream(), "UTF-8")
