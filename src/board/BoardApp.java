@@ -8,10 +8,12 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 
+import connection.ConnectionManager;
 import remote.IRemoteBoard;
 import remote.IRemoteUsers;
 
@@ -21,13 +23,18 @@ public class BoardApp extends JFrame implements ActionListener, ChangeListener {
     private final WhiteBoard whiteBoard;
     private final JColorChooser chooser;
     private final String userName;
-    private IRemoteUsers remoteUsers;
+    private final IRemoteUsers remoteUsers;
+    //private final ConnectionManager connectionManager;
+    private final ConnectionManager connectionManager;
     private JTextArea listDisplay;
+    private Thread updateThread;
     //private ArrayList<String> users;
 
-    public BoardApp(boolean isManager, IRemoteBoard board, String userName, IRemoteUsers remoteUsers) {
+    public BoardApp(boolean isManager, IRemoteBoard board, String userName, IRemoteUsers remoteUsers,
+                    ConnectionManager connectionManager) {
         this.userName = userName;
         this.remoteUsers = remoteUsers;
+        this.connectionManager = connectionManager;
         //this.users = remoteUsers.getUsers();
         this.setTitle("Shared White Board");
 
@@ -77,13 +84,16 @@ public class BoardApp extends JFrame implements ActionListener, ChangeListener {
         whiteBoard.setLayout(new BorderLayout());
         //whiteBoard.setBounds(5, 50, 600, 600);
         chooser.getSelectionModel().addChangeListener(this);
+        if (isManager) {
+
+        }
         this.setLayout(new BorderLayout());
         //this.add(name, BorderLayout.EAST);
         this.add(listDisplay, BorderLayout.EAST);
         this.add(colorPanel, BorderLayout.SOUTH);
         this.add(buttonPanel, BorderLayout.NORTH);
         this.add(whiteBoard, BorderLayout.CENTER);
-        Thread updateThread = new Thread(() -> {
+        updateThread = new Thread(() -> {
             try {
                 setList();
             } catch (RemoteException e) {
@@ -119,7 +129,24 @@ public class BoardApp extends JFrame implements ActionListener, ChangeListener {
 
     }
 
+    public void popUpJoinRequest(String userName) throws IOException {
+        int a = JOptionPane.showConfirmDialog(this, "Allow " + userName + " to join?");
+        if (a == JOptionPane.YES_OPTION) {
+            remoteUsers.newUser(userName);
+            connectionManager.approve(userName);
+        } else {
+            connectionManager.reject(userName);
+        }
+    }
 
+    public void popUpKicked() {
+        JOptionPane.showMessageDialog(this, "You have been kicked", "Alert",
+                JOptionPane.WARNING_MESSAGE);
+
+        updateThread.interrupt();
+        this.setVisible(false);
+        this.dispose();
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -131,4 +158,5 @@ public class BoardApp extends JFrame implements ActionListener, ChangeListener {
     public void stateChanged(ChangeEvent e) {
         whiteBoard.setColor(this.chooser.getColor());
     }
+
 }
