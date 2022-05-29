@@ -42,7 +42,7 @@ public class BoardApp extends JFrame implements ActionListener, ChangeListener {
         this.connectionManager = connectionManager;
         //this.users = remoteUsers.getUsers();
         this.setTitle("Shared White Board");
-
+        this.setLayout(new BorderLayout());
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         JLabel name = new JLabel();
         name.setText("Welcome, "+ userName + "      ");
@@ -90,6 +90,12 @@ public class BoardApp extends JFrame implements ActionListener, ChangeListener {
         //whiteBoard.setBounds(5, 50, 600, 600);
         chooser.getSelectionModel().addChangeListener(this);
         if (isManager) {
+
+            BoardMenu menu = new BoardMenu(this, board);
+
+
+            this.add(menu, BorderLayout.NORTH);
+            //this.add(bar);
             JTextField kickField = new JTextField();
             JButton kickButton = new JButton("Kick");
             kickButton.addActionListener(e -> {
@@ -135,16 +141,27 @@ public class BoardApp extends JFrame implements ActionListener, ChangeListener {
                 remoteException.printStackTrace();
             }
         });
-        left.add(chatDisplay);
-        left.add(sendField);
-        left.add(sendButton);
-        //this.setLayout(new BorderLayout());
+        left.setLayout(new BorderLayout());
+        JPanel n = new JPanel();
+        n.setLayout(new FlowLayout());
+        n.add(sendButton);
+        n.add(sendField);
+        left.add(chatDisplay, BorderLayout.CENTER);
+        left.add(n, BorderLayout.SOUTH);
+        JPanel center = new JPanel();
+        center.setLayout(new BorderLayout());
+        center.add(buttonPanel, BorderLayout.NORTH);
+        center.add(whiteBoard, BorderLayout.CENTER);
         //this.add(name, BorderLayout.EAST);
-        this.add(left, BorderLayout.WEST);
-        this.add(userList, BorderLayout.EAST);
-        this.add(colorPanel, BorderLayout.SOUTH);
-        this.add(buttonPanel, BorderLayout.NORTH);
-        this.add(whiteBoard, BorderLayout.CENTER);
+        JPanel main = new JPanel();
+        main.setLayout(new BorderLayout());
+        main.setBounds(0, 20, 600, 600);
+        main.add(left, BorderLayout.WEST);
+        main.add(userList, BorderLayout.EAST);
+        main.add(colorPanel, BorderLayout.SOUTH);
+        main.add(center, BorderLayout.CENTER);
+
+        this.add(main, BorderLayout.CENTER);
 
         updateThread = new Thread(() -> {
             try {

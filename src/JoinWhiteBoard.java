@@ -48,7 +48,6 @@ public class JoinWhiteBoard {
                         break;
                     case "Kick":
                         app.popUpKicked();
-                        System.out.println("bruh");
                         break;
                     case "Rejected":
                         System.out.println("You have been rejected by the board manager");

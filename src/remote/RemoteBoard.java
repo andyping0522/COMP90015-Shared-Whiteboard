@@ -76,28 +76,22 @@ public class RemoteBoard extends UnicastRemoteObject implements IRemoteBoard {
 
 
         g.drawOval(x, y, w, h);
-        System.out.println("bruh");
         Shape oval = new Ellipse2D.Double(x, y, w, h);
         this.shapes.add(new ColorShape(c, oval));
     }
 
+    @Override
+    public void clear() throws RemoteException {
+        this.shapes.clear();
+    }
 
     @Override
-    public byte[] getBoard() throws RemoteException {
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        byte[] out;
-        try{
-            ImageIO.write(board, "jpg", os);
-            System.out.println("hello");
-            out = os.toByteArray();
-            System.out.println(out);
-        } catch (IOException e) {
-            e.printStackTrace();
-            out = null;
-        }
-        return out;
-
+    public void setShapes(ArrayList<ColorShape> shapes) throws RemoteException {
+        this.shapes = shapes;
     }
+
+
+
 
     @Override
     public ArrayList<ColorShape> getComponents() {

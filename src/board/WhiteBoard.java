@@ -168,6 +168,6 @@ public class WhiteBoard extends JPanel implements MouseListener{
     @Override
     public Dimension getPreferredSize()
     {
-        return new Dimension(600, 600);
+        return new Dimension(300, 300);
     }
 }

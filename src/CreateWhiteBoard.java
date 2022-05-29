@@ -59,7 +59,7 @@ public class CreateWhiteBoard {
                     }
                 };
                 worker.start();
-                
+
             }
         } catch (AccessException e) {
             e.printStackTrace();
