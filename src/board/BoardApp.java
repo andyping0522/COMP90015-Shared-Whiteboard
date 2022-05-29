@@ -85,11 +85,35 @@ public class BoardApp extends JFrame implements ActionListener, ChangeListener {
         //whiteBoard.setBounds(5, 50, 600, 600);
         chooser.getSelectionModel().addChangeListener(this);
         if (isManager) {
+            JTextField kickField = new JTextField();
+            JButton kickButton = new JButton("Kick");
+            kickButton.addActionListener(e -> {
+                String name1 = kickField.getText();
+                try {
+                    if (!remoteUsers.verifyName(name1)) {
+                        popUpNotExist();
+
+                    } else if (name1.equals(userName)) {
+                        popUpKickSelf();
+                    } else {
+//                        System.out.println(name1);
+//                        System.out.println(userName);
+                        connectionManager.kick(name1);
+                        remoteUsers.removeUser(name1);
+                    }
+                } catch (RemoteException remoteException) {
+                    remoteException.printStackTrace();
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
+            });
+            userList.add(kickField, BorderLayout.CENTER);
+            userList.add(kickButton, BorderLayout.SOUTH);
 
         }
         this.setLayout(new BorderLayout());
         //this.add(name, BorderLayout.EAST);
-        this.add(listDisplay, BorderLayout.EAST);
+        this.add(userList, BorderLayout.EAST);
         this.add(colorPanel, BorderLayout.SOUTH);
         this.add(buttonPanel, BorderLayout.NORTH);
         this.add(whiteBoard, BorderLayout.CENTER);
@@ -148,6 +172,16 @@ public class BoardApp extends JFrame implements ActionListener, ChangeListener {
         this.dispose();
     }
 
+    private void popUpNotExist() {
+        JOptionPane.showMessageDialog(this, "User does not exist", "Alert",
+                JOptionPane.WARNING_MESSAGE);
+    }
+
+    private void popUpKickSelf() {
+        JOptionPane.showMessageDialog(this, "Cannot kick yourself", "Alert",
+                JOptionPane.WARNING_MESSAGE);
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         whiteBoard.setType(e.getActionCommand());
@@ -158,5 +192,7 @@ public class BoardApp extends JFrame implements ActionListener, ChangeListener {
     public void stateChanged(ChangeEvent e) {
         whiteBoard.setColor(this.chooser.getColor());
     }
+
+
 
 }

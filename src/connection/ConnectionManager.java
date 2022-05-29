@@ -29,6 +29,7 @@ public class ConnectionManager {
         );
 
         out.write("Kick\n");
+        out.flush();
         socket.close();
         clientSockets.remove(user);
     }

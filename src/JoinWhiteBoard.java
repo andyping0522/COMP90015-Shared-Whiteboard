@@ -8,7 +8,6 @@ import java.io.*;
 import java.net.Socket;
 import java.rmi.AccessException;
 import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
@@ -48,6 +47,7 @@ public class JoinWhiteBoard {
                         break;
                     case "Kick":
                         app.popUpKicked();
+                        System.out.println("bruh");
                         break;
                     case "Rejected":
                         System.out.println("You have been rejected by the board manager");
