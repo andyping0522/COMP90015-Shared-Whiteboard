@@ -9,7 +9,7 @@ public class Server {
 
     public static void main(String[] args) {
 
-        int port = Integer.parseInt(args[0]);
+        //int port = Integer.parseInt(args[0]);
 
         try {
             IRemoteBoard board = new RemoteBoard();
